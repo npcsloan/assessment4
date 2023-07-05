@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Posts</title>
+{% endblock %}
+
+
+{% block body %}
+<br>
+<div>
+    <h1 style="display:inline"><img src="/static/img/all-twoges.png" alt="logo" height="200" /> All Twoges</h1>
+    <a style="display:inline" class="btn btn-success float-right" href="/posts/new">+ New Post</a>
+</div>
+    {% for post in posts %}
+        <br>
+        <h2>{{ post.title }}</h2>
+
+        {% if post.author %}
+            <small> Written By: {{ post.author }} on {{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+        {% else %}
+        <small> Written By: Unknown on {{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+        {% endif %}
+        <br>
+        <br>
+        <p style="white-space:pre-wrap">{{ post.content }}</p>
+        <a class="btn btn-danger" href='/posts/delete/{{ post.id }}'>Delete &raquo;</a>
+        <a class="btn btn-primary" href='/posts/edit/{{ post.id }}'>Edit &raquo;</a>
+        <br>
+        <br>
+        <hr>
+    {% endfor %}
+
+{% endblock %}

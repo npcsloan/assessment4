@@ -1,0 +1,48 @@
+version: "3.7"
+
+services:
+    database:
+        image: postgres:latest
+        container_name: twoge-database-server
+        environment:
+            POSTGRES_DB: twoge_db
+            POSTGRES_USER: chandra
+            POSTGRES_PASSWORD: akjA8iLp2A
+        ports:
+          - 5432:5432
+        networks:
+            - twoge_app_network
+        volumes:
+          - pgdata:/var/lib/postgresql/data
+        healthcheck:
+          test: ["CMD", "pg_isready", "-U", "chandra", "-d", "twoge_db"]
+          interval: 10s
+          timeout: 5s
+          retries: 3
+
+    app:
+        build: .
+        restart: always
+        container_name: twoge-app
+        ports:
+          - 80:8080
+        networks:
+            - twoge_app_network
+        volumes:
+            - .:/app
+        environment:
+            DB_USER: chandra
+            DB_PASSWORD: akjA8iLp2A
+            DB_HOST: twoge-database-server
+            DB_PORT: 5432
+            DB_DATABASE: twoge_db
+        depends_on:
+          database:
+            condition: service_healthy
+
+networks:
+    twoge_app_network:
+        driver: bridge
+
+volumes:
+  pgdata:
