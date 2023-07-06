@@ -3,7 +3,7 @@
 1. Showcase deployment of a Python Flask-based Twitter alternative called 'Twoge' using first EKS and then Minikube
 2. Present diagrams, describe relationship between different resources
 3. Go over files and commands used; ask for questions; focus only on areas of particular interest
-## Project Diagrams
+## Project Diagrams (Specifies EKS but more or less the same for Minikube)
 ### Configuring from Local Machine
 <img src="https://github.com/npcsloan/assessment4/blob/main/Local-to-EKS.png">
 
