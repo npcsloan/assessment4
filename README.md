@@ -230,3 +230,23 @@ eksctl create addon --name aws-ebs-csi-driver --cluster austin-assessment4 --ser
 19. Run ```kubectl get all``` again to get address of app service. Go to [address](http://abcc58a2233004b73a779db0456a7810-142099778.us-west-1.elb.amazonaws.com/) in browser to see running application:
 <img src="https://github.com/npcsloan/assessment4/blob/main/Homepage.png">
 <img src="https://github.com/npcsloan/assessment4/blob/main/Posts.png">
+
+## Using Minikube:
+1. Change App Service file:
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: twoge-service
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    targetPort: 8080
+    nodePort: 30100
+  selector:
+    app: twoge-k8s
+```
+2. Change contexts to minikube (untested) ```kubectl config use-context Minikube```
+3. Reapply configuration files in same order
+4. Run ```minikube service twoge-service --namespace twogespace --url```; paste url in browser
