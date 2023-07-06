@@ -1,13 +1,16 @@
 # Assessment 4 - Twoge
-
+## Presentation Goal
+1. Showcase deployment of a Python Flask-based Twitter alternative called 'Twoge' using first EKS and then Minikube
+2. Present diagrams, describe relationship between different resources
+3. Go over files and commands used; ask for questions; focus only on areas of particular interest
 ## Project Diagrams
 ### Configuring from Local Machine
 <img src="https://github.com/npcsloan/assessment4/blob/main/Local-to-EKS.png">
 
-### Internal architecture of EKS Cluster
+### Architecture of EKS Cluster
 <img src="https://github.com/npcsloan/assessment4/blob/main/EKS-cluster-diagram.png">
 
-## Steps taken and files used
+## Deploy using EKS
 1. Fork [repo](https://github.com/chandradeoarya/twoge) and git clone k8s branch
 ### Dockerfile
 2. Create Dockerfile and run ```docker build -t npcsloan/assessment4 .```
@@ -84,12 +87,12 @@ spec:
           image: npcsloan/assessment4
           ports:
             - containerPort: 8080
-          readinessProbe:
+          readinessProbe: # checks to see if pod is ready for traffic
             tcpSocket:
               port: 8080
             initialDelaySeconds: 5
             periodSeconds: 10
-          livenessProbe:
+          livenessProbe: # checks if pod is running
             tcpSocket:
               port: 8080
             initialDelaySeconds: 15
@@ -205,7 +208,7 @@ spec:
 ```
 eksctl create cluster --region us-west-1 --node-type t2.small --nodes 1 --nodes-min 1 --nodes-max 1 --name austin-assessment4
 ```
-13. Configure EKS Volume etc. (need explanation)
+13. Configure EKS Volume (still need to create PV and PVC)
 ```
 eksctl utils associate-iam-oidc-provider --region=eu-central-1 --cluster=YourClusterNameHere --approve
 ```
@@ -220,33 +223,20 @@ eksctl create iamserviceaccount \
   --role-name AmazonEKS_EBS_CSI_DriverRole
 ```
 ```
-eksctl create addon --name aws-ebs-csi-driver --cluster austin-assessment4 --service-account-role-arn arn:aws:iam::$(aws sts get-caller-identity --query Account --output text):role/AmazonEKS_EBS_CSI_DriverRole --force
+eksctl create addon --name aws-ebs-csi-driver --cluster austin-assessment4 \
+--service-account-role-arn arn:aws:iam::$(aws sts get-caller-identity --query Account \
+--output text):role/AmazonEKS_EBS_CSI_DriverRole --force
 ```
 14. Apply namespace ```kubectl apply -f namespace```
 15. Switch namespaces ```kubectl config set-context --current --namespace=twogespace```
 16. Apply Configmap and Secrets file ```kubectl apply -f variables```
 17. Apply app and database deployments and services ```kubectl apply -f twoge-kube```
 18. Use ```kubectl get all``` to check deployment status; once all is stable apply resource quota to namespace ```kubectl apply -f resourcequota```
-19. Run ```kubectl get all``` again to get address of app service. Go to [address](http://abcc58a2233004b73a779db0456a7810-142099778.us-west-1.elb.amazonaws.com/) in browser to see running application:
-<img src="https://github.com/npcsloan/assessment4/blob/main/Homepage.png">
-<img src="https://github.com/npcsloan/assessment4/blob/main/Posts.png">
+19. Run ```kubectl get all``` again to get address of app service. Go to address in browser to see running application:
+<img src="https://github.com/npcsloan/assessment4/blob/main/eks-twoge.png">
 
-## Using Minikube:
-1. Change App Service file:
-```
-apiVersion: v1
-kind: Service
-metadata:
-  name: twoge-service
-spec:
-  type: NodePort
-  ports:
-  - port: 8080
-    targetPort: 8080
-    nodePort: 30100
-  selector:
-    app: twoge-k8s
-```
-2. Change contexts to minikube (untested) ```kubectl config use-context Minikube```
-3. Reapply configuration files in same order
-4. Run ```minikube service twoge-service --namespace twogespace --url```; paste url in browser
+## Using Minikube
+1. Change context to minikube ```kubectl config use-context minikube```
+2. Reapply configuration files in same order
+3. Run ```minikube service twoge-service --namespace twogespace --url```; paste url in browser:
+<img src="https://github.com/npcsloan/assessment4/blob/main/localhost-twoge.png">
