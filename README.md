@@ -9,9 +9,9 @@
 
 ## Steps taken and files used
 1. Fork [repo](https://github.com/chandradeoarya/twoge) and git clone k8s branch
+### Dockerfile
 2. Create Dockerfile and run ```docker build -t npcsloan/assessment4 .```
 3. Push to dockerhub ```docker push npcsloan/assessment4```
-### Dockerfile
 ```
 FROM python:alpine
 
@@ -26,8 +26,8 @@ RUN pip install -r requirements.txt
 EXPOSE 8080
 CMD python app.py
 ```
-4. Create namespace file
 ### Namespace
+4. Create namespace file
 ```
 apiVersion: v1
 kind: Namespace
@@ -36,8 +36,8 @@ metadata:
   labels:
     name: twogespace
 ```
-5. Create Configmap file
 ### Configmap
+5. Create Configmap file
 ```
 apiVersion: v1
 kind: ConfigMap
@@ -47,8 +47,8 @@ data:
   database_url: "postgres-service"
   database_port: "5432"
 ```
-6. Create Secrets file
 ### Secrets
+6. Create Secrets file
 ```
 apiVersion: v1
 kind: Secret
@@ -60,8 +60,8 @@ data:
   username: <your username>
   password: <your password>
 ```
-7. Create application deployment file using docker image created in step 1
 ### Application Deployment
+7. Create application deployment file using docker image created in step 1
 ```
 apiVersion: apps/v1
 kind: Deployment
@@ -121,8 +121,8 @@ spec:
                   name: postgres-configmap
                   key: database_port
 ```
-8. Configure connectivity of application deployment via Service file
 ### Application Service
+8. Configure connectivity of application deployment via Service file
 ```
 apiVersion: v1
 kind: Service
@@ -136,8 +136,8 @@ spec:
   selector:
     app: twoge-k8s
 ```
-9. Create database deployment file using postgres image
 ### Database Deployment
+9. Create database deployment file using postgres image
 ```
 apiVersion: apps/v1
 kind: Deployment
@@ -173,8 +173,8 @@ spec:
                 name: postgres-secret
                 key: password
 ```
-10. Configure connectivity of database deployment via Service file
 ### Database Service
+10. Configure connectivity of database deployment via Service file
 ```
 apiVersion: v1
 kind: Service
@@ -187,8 +187,8 @@ spec:
   ports:
   - port: 5432
 ```
-11. Create resource quota file with desired specs
 ### Resource Quota
+11. Create resource quota file with desired specs
 ```
 apiVersion: v1
 kind: ResourceQuota
