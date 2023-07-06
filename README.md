@@ -232,7 +232,7 @@ eksctl create addon --name aws-ebs-csi-driver --cluster austin-assessment4 \
 16. Apply Configmap and Secrets file ```kubectl apply -f variables```
 17. Apply app and database deployments and services ```kubectl apply -f twoge-kube```
 18. Use ```kubectl get all``` to check deployment status; once all is stable apply resource quota to namespace ```kubectl apply -f resourcequota```
-19. Run ```kubectl get all``` again to get address of app service. Go to address in browser to see running application:
+19. Run ```kubectl get services``` to get address of app service. Go to address in browser to see running application:
 <img src="https://github.com/npcsloan/assessment4/blob/main/eks-twoge.png">
 
 ## Using Minikube
