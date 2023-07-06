@@ -237,6 +237,6 @@ eksctl create addon --name aws-ebs-csi-driver --cluster austin-assessment4 \
 
 ## Using Minikube
 1. Change context to minikube ```kubectl config use-context minikube```
-2. Reapply configuration files in same order
+2. Redo steps 14-18 to apply files
 3. Run ```minikube service twoge-service --namespace twogespace --url```; paste url in browser:
 <img src="https://github.com/npcsloan/assessment4/blob/main/localhost-twoge.png">
